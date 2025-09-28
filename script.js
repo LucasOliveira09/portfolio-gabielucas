@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     /**
      * Função principal para inicializar e gerenciar um carrossel.
      * @param {string} carouselId O ID do elemento do carrossel (ex: 'image-carousel').
@@ -9,14 +9,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function initializeCarousel(carouselId, prevBtnId, nextBtnId) {
         const carousel = document.getElementById(carouselId);
         
-        if (!carousel) return; // Sai se o carrossel não for encontrado
-        
+        if (!carousel) return;
+
         const items = carousel.querySelectorAll('.carousel-item');
         const prevBtn = document.getElementById(prevBtnId);
         const nextBtn = document.getElementById(nextBtnId);
+        
+        if (items.length === 0) return;
 
         let currentIndex = 0; 
         const totalItems = items.length;
+
+        // O valor do gap (espaçamento) é definido no CSS: 20px
+        const GAP = 20;
 
         // Centraliza o carrossel no item ativo
         function updateCarousel() {
@@ -28,27 +33,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // 2. Calcula o deslocamento (para centralizar o item ativo)
-            if (items.length === 0) return;
-
             const activeItem = items[currentIndex];
-            // Largura do item ATUAL com a classe 'active'
-            const activeItemWidth = activeItem.offsetWidth; 
-            // Largura do contêiner visível
-            const containerWidth = carousel.parentElement.offsetWidth; 
+            const containerWidth = carousel.parentElement.offsetWidth;
             
+            // Largura calculada do item ativo após a classe 'active' ser aplicada
+            // É importante garantir que o layout tenha tempo de recalcular a largura,
+            // mas para a maioria dos navegadores, a leitura é instantânea.
+            const activeItemWidth = activeItem.offsetWidth;
+
             // Posição do item ativo em relação ao carrossel
-            const offsetLeft = activeItem.offsetLeft; 
+            // Soma a largura de todos os itens e gaps *antes* do item ativo
+            let offsetLeft = 0;
+            for (let i = 0; i < currentIndex; i++) {
+                // Para simplificar, assumimos que os itens não ativos têm a mesma largura.
+                // Se a largura de todos os itens for igual (exceto o ativo), 
+                // podemos somar a largura do item anterior + o gap.
+                // Usaremos a largura do primeiro item não ativo como base.
+                const itemBefore = items[i];
+                offsetLeft += itemBefore.offsetWidth + GAP; 
+            }
             
-            // Calcula o quanto mover para centralizar o item ativo
-            // Deslocamento = Posição Inicial do Item - (Metade da Largura do Contêiner) + (Metade da Largura do Item Ativo)
+            // CALCULAR O DESLOCAMENTO:
+            // O valor para TRANSLATE X é:
+            // (Posição inicial do item ativo) - (Metade da Largura do Contêiner) + (Metade da Largura do Item Ativo)
             const scrollAmount = offsetLeft - (containerWidth / 2) + (activeItemWidth / 2);
             
-            // Aplica o transform. 
+            // Aplica o transform.
             carousel.style.transform = `translateX(-${scrollAmount}px)`;
         }
 
-        // 3. Navegação
+        // 2. Navegação
         if (prevBtn) {
             prevBtn.addEventListener('click', () => {
                 currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalItems - 1;
@@ -63,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Inicializa e recalcula em resize
+        // 3. Inicializa e recalcula em resize
         updateCarousel();
         window.addEventListener('resize', updateCarousel);
     }

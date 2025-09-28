@@ -114,11 +114,12 @@ a {
     position: relative;
     border-radius: 8px; /* Cantos arredondados */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    margin-top: -10px;
 }
 
 .hero-image {
-    width: 350px;
-    height: 500px;
+    width: 430px;
+    height: 560px;
     object-fit: cover;
     display: block;
 }
