@@ -213,7 +213,7 @@ a {
 }
 
 /* Seção de Caixas de Serviços (Três caixas) */
-.services-boxes-section {
+#services.contact-stats-section {
     display: flex;
     flex-wrap: wrap; 
     gap: var(--padding-base);
@@ -285,7 +285,14 @@ a {
     align-items: center; 
     gap: 20px; 
     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
-    padding: 30px 0; 
+    padding: 30px 0;
+    /* NOVO: Dica de performance */
+    will-change: transform;
+}
+
+/* NOVO: Dica de performance para os itens */
+.carousel-item {
+    will-change: width, height, transform, opacity, filter;
 }
 
 /* Estilos dos Botões de Navegação */
@@ -314,6 +321,11 @@ a {
 }
 
 /* --- SEÇÃO DE FOTOS (HORIZONTAL) --- */
+
+.services-boxes-section {
+    /* Este seletor foi criado no HTML para a seção de imagens */
+    /* Garante que o H1 não seja afetado pelo flex-direction: column do responsivo */
+}
 
 .services-boxes-section h1 {
     width: 100%;
@@ -385,6 +397,8 @@ a {
     width: 100%;
     aspect-ratio: 9 / 16; /* Proporção 9:16 (vertical) */
     background-color: #000;
+    border-radius: 12px; /* Arredonda a borda do vídeo */
+    overflow: hidden; /* Garante que o iframe respeite a borda */
 }
 
 .video-carousel-section .carousel-item iframe {
@@ -474,6 +488,12 @@ a {
     .contact-stats-section {
         flex-direction: column;
     }
+    
+    /* Ajuste para a seção de 3 caixas não ser afetada */
+    #services.contact-stats-section {
+        flex-direction: row; /* Mantém a direção em linha */
+    }
+
     .service-box {
         min-width: 45%; 
     }
@@ -514,10 +534,20 @@ a {
     .role-location {
         font-size: 18px;
     }
-    .contact-box, .stats-box, .service-box {
+    .contact-box, .stats-box {
         padding: 30px 20px;
         min-width: 100%;
     }
+    
+    /* Ajuste para a seção de 3 caixas */
+    #services.contact-stats-section {
+        flex-direction: column; /* Agora sim, empilha em celular */
+    }
+    .service-box {
+        padding: 30px 20px;
+        min-width: 100%;
+    }
+
     .contact-box h2 {
         font-size: 24px;
     }
@@ -531,23 +561,23 @@ a {
         padding: 10px 0;
     }
     .services-boxes-section .carousel-item {
-        width: 100%; 
+        width: 100%; /* Ajuste para mostrar 1 item por vez */
         height: 250px;
         box-shadow: none;
     }
     .services-boxes-section .carousel-item.active {
-        width: 90%; 
+        width: 90%; /* Item ativo fica um pouco menor que o container */
         height: 300px;
         box-shadow: 0 10px 20px rgba(0, 188, 212, 0.4);
     }
     
     /* Carrossel de Vídeos em Celular (1 item) */
     .video-carousel-section .carousel-item {
-        width: 75%; 
+        width: 75%; /* Item não-ativo tem 75% da largura */
         border-radius: 12px;
     }
     .video-carousel-section .carousel-item.active {
-        transform: scale(1.05);
+        transform: scale(1.05); /* Item ativo cresce um pouco */
     }
 
     .nav-btn {
