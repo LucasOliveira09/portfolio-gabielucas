@@ -51,6 +51,10 @@ a {
     letter-spacing: 2px;
 }
 
+.lg-img {
+    width: 100px;
+}
+
 .navbar a {
     color: var(--color-text-mid);
     text-decoration: none;
